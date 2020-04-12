@@ -1,0 +1,59 @@
+##HOW TO INSTALL LIBRENMS ON A RASPBERRY PI PART 2##
+##THIS IS DONE WITH ROOT##
+##DON'T FORGET TO CHANGE SQL PASSWORD##
+##NOTE CTRL W TO SEARCH USING NANO##
+
+sudo -s
+systemctl restart mysql 
+CREATE DATABASE librenms CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+CREATE USER 'librenms'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON librenms.* TO 'librenms'@'localhost';
+FLUSH PRIVILEGES;
+exit
+sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf
+Ctrl+X
+systemctl restart mysql
+
+sudo nano /etc/php/7.3/apache2/php.ini
+#Remove semicolon date.timezone = Location/Location
+sudo nano /etc/php/7.3/cli/php.ini
+#Remove semicolon date.timezone = Location/Location
+a2enmod php7.3
+a2dismod mpm_event
+a2enmod mpm_prefork
+sudo nano /etc/apache2/sites-available/librenms.conf
+
+Add the following to the config
+
+<VirtualHost *:80>
+  DocumentRoot /opt/librenms/html/
+  ServerName  librenms.example.com
+
+  AllowEncodedSlashes NoDecode
+  <Directory "/opt/librenms/html/">
+    Require all granted
+    AllowOverride All
+    Options FollowSymLinks MultiViews
+  </Directory>
+</VirtualHost>
+
+a2dissite 000-default
+a2ensite librenms.conf
+a2enmod rewrite
+systemctl restart apache2
+
+cp /opt/librenms/snmpd.conf.example /etc/snmp/snmpd.conf
+sudo nano /etc/snmp/snmpd.conf
+Edit the text which says RANDOMSTRINGGOESHERE and set your own community string.
+systemctl restart snmpd
+
+curl -o /usr/bin/distro https://raw.githubusercontent.com/librenms/librenms-agent/master/snmp/distro
+chmod +x /usr/bin/distro
+systemctl restart snmpd
+
+cp /opt/librenms/librenms.nonroot.cron /etc/cron.d/librenms
+
+
+cd /opt/librenms
+./validate.php
+
