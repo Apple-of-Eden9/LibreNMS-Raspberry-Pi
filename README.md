@@ -8,4 +8,4 @@ A Quick script/guide on how to install LibreNMS on a Raspberry Pi. This has been
 Raspbian Buster Full
 
 # Credits 
-Full Credits go to CWNE88 on his brilliant Youtube Tutorial - https://www.youtube.com/watch?v=s55U_tQw5Sc
+Full Credit go to CWNE88 on his brilliant Youtube Tutorial - https://www.youtube.com/watch?v=s55U_tQw5Sc
