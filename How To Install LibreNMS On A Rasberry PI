@@ -11,6 +11,8 @@ GRANT ALL PRIVILEGES ON librenms.* TO 'librenms'@'localhost';
 FLUSH PRIVILEGES;
 exit
 sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf
+innodb_file_per_table=1
+lower_case_table_names=0
 Ctrl+X
 systemctl restart mysql
 
